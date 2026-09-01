@@ -9,13 +9,13 @@
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 <meta property="og:type" content="article">
-<meta property="og:url" content="https://hiraiapp.com/docs/self-hosted/">
+<meta property="og:url" content="https://hiraiapp.xyz/docs/self-hosted/">
 <meta property="og:title" content="Self-hosted runtime — Hirai App docs">
 <meta property="og:description" content="Run the agent on your own machine, with the keys in a process that has no network.">
-<meta property="og:image" content="https://hiraiapp.com/og.png">
+<meta property="og:image" content="https://hiraiapp.xyz/og.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:site" content="@hiraiapp">
-<meta name="twitter:image" content="https://hiraiapp.com/og.png">
+<meta name="twitter:image" content="https://hiraiapp.xyz/og.png">
 <link rel="stylesheet" href="/fonts.css">
 <style>
 :root{
@@ -190,7 +190,7 @@ hiraiapp-agent     runs the model loop, the sandbox, the channels
 <p>Key export exists, as a command a person runs on the box. It is not reachable from the agent, from any channel, or from any model tool — the module that performs it is not linked into the process that serves the socket. Run <code>hiraiapp doctor</code> on your own machine and it prints these lists, so you can check the claim rather than trust it.</p>
 <h2>Install</h2>
 <p>Two lines, as root, on a fresh Linux box:</p>
-<pre><code class="language-bash">curl -fsSO https://hiraiapp.com/hiraiapp.tar.gz
+<pre><code class="language-bash">curl -fsSO https://hiraiapp.xyz/hiraiapp.tar.gz
 mkdir -p /opt/hiraiapp &amp;&amp; tar -xzf hiraiapp.tar.gz -C /opt/hiraiapp &amp;&amp; bash /opt/hiraiapp/packaging/install.sh
 </code></pre>
 <p>Unpack into <code>/opt/hiraiapp</code> rather than wherever you are standing. The signer runs as its own account and every directory above the code has to be traversable by it — a root shell starts in <code>/root</code>, which is mode <code>0700</code>. The installer checks this by having each account actually open a file, and refuses with the reason rather than leaving you a service that crash-loops while <code>systemctl</code> reports it active.</p>
@@ -243,7 +243,7 @@ systemctl enable --now hiraiapp-signer.service
 ▸ executing
 ▸ settled
 ▸ saved  splitbill-source.zip  (20796 bytes)
-▸ live   https://apps.hiraiapp.com/splitbill/
+▸ live   https://apps.hiraiapp.xyz/splitbill/
 </code></pre>
 <p>The tool is governed by the policy — it runs only when tool use is permitted, and the signer decides that over the socket, in the other process. It also cannot reach the signer at all: it carries <code>fetch</code>, a place to print, and nothing else. That is enforced by a test that walks its import graph and fails if the signer client is reachable through any path, because everything this tool touches — the sentence, the job&#39;s status strings, the URLs in the response — arrives from outside.</p>
 <h2>Cross-chain routes and <code>refundTo</code></h2>
@@ -268,7 +268,7 @@ systemctl enable --now hiraiapp-signer.service
     </div>
     <div class="foot-bottom">
       <span>© 2026 Hirai App</span>
-      <span>hiraiapp.com</span>
+      <span>hiraiapp.xyz</span>
     </div>
   </div>
 </footer>

@@ -9,13 +9,13 @@
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 <meta property="og:type" content="article">
-<meta property="og:url" content="https://hiraiapp.com/docs/gateway/">
+<meta property="og:url" content="https://hiraiapp.xyz/docs/gateway/">
 <meta property="og:title" content="Gateway — Hirai App docs">
 <meta property="og:description" content="An OpenAI-compatible endpoint with one key. Point any SDK at it and change one line.">
-<meta property="og:image" content="https://hiraiapp.com/og.png">
+<meta property="og:image" content="https://hiraiapp.xyz/og.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:site" content="@hiraiapp">
-<meta name="twitter:image" content="https://hiraiapp.com/og.png">
+<meta name="twitter:image" content="https://hiraiapp.xyz/og.png">
 <link rel="stylesheet" href="/fonts.css">
 <style>
 :root{
@@ -164,7 +164,7 @@ footer{border-top:1px solid var(--line);padding:56px 0 40px;color:var(--ink-2);f
 <p class="lead">The same router the chat uses, with an OpenAI-compatible API in front of it. Existing clients work unmodified — the only line that changes is the base URL.</p>
 
 <h2>Base URL and key</h2>
-<pre><code>https://api.hiraiapp.com/v1
+<pre><code>https://api.hiraiapp.xyz/v1
 </code></pre>
 <p>Create a key in <strong>Settings → Gateway keys</strong>. It is shown once and stored only as a hash, so it cannot be recovered — if you lose one, revoke it and make another.</p>
 <p>Keys look like <code>hiraiapp_…</code>. Pass one as a bearer token:</p>
@@ -173,13 +173,13 @@ footer{border-top:1px solid var(--line);padding:56px 0 40px;color:var(--ink-2);f
 <p>Cookies do not authenticate here. The key is the only credential <code>/v1</code> accepts. A key carries your balance, so treat it like a password: keep it server-side, and never ship it to a browser.</p>
 <h2>Listing models</h2>
 <p><code>GET /v1/models</code> returns everything you can call right now, with its price per million tokens.</p>
-<pre><code class="language-bash">curl https://api.hiraiapp.com/v1/models \
+<pre><code class="language-bash">curl https://api.hiraiapp.xyz/v1/models \
   -H &quot;Authorization: Bearer $HORAI_API_KEY&quot;
 </code></pre>
 <p>The list is live and it is yours: add an <a href="/docs/models-and-keys/">Anthropic key</a> and Claude models appear in it. A model with no published price is not in the list and will not run.</p>
 <h2>Chat completions</h2>
 <p><code>POST /v1/chat/completions</code> takes <code>messages</code>, <code>model</code> (defaults to <code>auto</code>), <code>stream</code>, <code>max_tokens</code> and <code>temperature</code>.</p>
-<pre><code class="language-bash">curl https://api.hiraiapp.com/v1/chat/completions \
+<pre><code class="language-bash">curl https://api.hiraiapp.xyz/v1/chat/completions \
   -H &quot;Authorization: Bearer $HORAI_API_KEY&quot; \
   -H &quot;Content-Type: application/json&quot; \
   -d &#39;{
@@ -192,7 +192,7 @@ footer{border-top:1px solid var(--line);padding:56px 0 40px;color:var(--ink-2);f
 
 client = OpenAI(
     api_key=&quot;hiraiapp_...&quot;,                  # your Hirai App key
-    base_url=&quot;https://api.hiraiapp.com/v1&quot;,   # the only line that changes
+    base_url=&quot;https://api.hiraiapp.xyz/v1&quot;,   # the only line that changes
 )
 
 resp = client.chat.completions.create(
@@ -206,7 +206,7 @@ print(resp.choices[0].message.content)
 
 const client = new OpenAI({
   apiKey: process.env.HORAI_API_KEY,
-  baseURL: &quot;https://api.hiraiapp.com/v1&quot;,
+  baseURL: &quot;https://api.hiraiapp.xyz/v1&quot;,
 });
 
 const resp = await client.chat.completions.create({
@@ -242,7 +242,7 @@ const resp = await client.chat.completions.create({
 <p><code>hiraiapp.cost_micro_usd</code> is the exact amount debited, in micro-USD — 1,000,000 is one dollar. <code>hiraiapp.byok</code> is <code>true</code> when the call ran on your own provider key, in which case the cost is zero here and your provider bills you directly.</p>
 <h2>Streaming</h2>
 <p>Set <code>stream: true</code> for server-sent events. Chunks arrive as <code>chat.completion.chunk</code>, the last one carries <code>usage</code>, and the stream ends with <code>data: [DONE]</code>.</p>
-<pre><code class="language-bash">curl -N https://api.hiraiapp.com/v1/chat/completions \
+<pre><code class="language-bash">curl -N https://api.hiraiapp.xyz/v1/chat/completions \
   -H &quot;Authorization: Bearer $HORAI_API_KEY&quot; \
   -H &quot;Content-Type: application/json&quot; \
   -d &#39;{
@@ -321,7 +321,7 @@ const resp = await client.chat.completions.create({
     </div>
     <div class="foot-bottom">
       <span>© 2026 Hirai App</span>
-      <span>hiraiapp.com</span>
+      <span>hiraiapp.xyz</span>
     </div>
   </div>
 </footer>
