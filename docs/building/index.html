@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Building — Hirai App docs</title>
+<meta name="description" content="The two deliverable classes, the proposal card, and what verified actually means.">
+<link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://hiraiapp.com/docs/building/">
+<meta property="og:title" content="Building — Hirai App docs">
+<meta property="og:description" content="The two deliverable classes, the proposal card, and what verified actually means.">
+<meta property="og:image" content="https://hiraiapp.com/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@hiraiapp">
+<meta name="twitter:image" content="https://hiraiapp.com/og.png">
+<link rel="stylesheet" href="/fonts.css">
+<style>
+:root{
+  --bg:#000000;
+  --ink:#F5F1E8;
+  --ink-2:#A9A69E;
+  --ink-3:#5E5C57;
+  --line:#1C1C1A;
+  --card:#0B0B0A;
+  --lime:#C6F135;
+  --mint:#5DF0C2;
+  --sky:#7FB3FF;
+  --peach:#FFB4A2;
+  --violet:#B388FF;
+  --display:'Sora',system-ui,sans-serif;
+  --body:'DM Sans',system-ui,sans-serif;
+  --mono:'DM Mono',ui-monospace,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.55;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+:focus-visible{outline:2px solid var(--lime);outline-offset:3px;border-radius:4px}
+.wrap{width:min(1120px,calc(100% - 48px));margin:0 auto}
+h1,h2,h3{font-family:var(--display);font-weight:600;letter-spacing:-.02em;line-height:1.15}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--lime)}
+
+/* nav — same chrome as the landing */
+header{position:sticky;top:0;z-index:20;backdrop-filter:blur(14px);background:rgba(0,0,0,.72);border-bottom:1px solid var(--line)}
+nav{display:flex;align-items:center;justify-content:space-between;height:68px;gap:16px}
+.logo{display:flex;align-items:center;gap:12px;font-family:var(--display);font-weight:600;font-size:22px;letter-spacing:-.02em}
+.logo .idot{color:var(--lime)}
+.nav-links{display:flex;gap:28px;font-size:15px;color:var(--ink-2)}
+.nav-links a:hover{color:var(--ink)}
+.nav-links a.here{color:var(--ink)}
+.btn{display:inline-flex;align-items:center;gap:10px;white-space:nowrap;font-family:var(--display);font-weight:600;font-size:14px;padding:10px 16px;border-radius:999px;border:1px solid var(--lime);background:var(--lime);color:#0A0A0A;transition:background .15s ease}
+.btn:hover{background:#D6FF55}
+@media (max-width:900px){.nav-links{display:none}}
+
+/* shell */
+.shell{display:grid;grid-template-columns:236px minmax(0,1fr);gap:56px;align-items:start;padding:48px 0 96px}
+@media (max-width:900px){.shell{grid-template-columns:1fr;gap:0;padding:24px 0 72px}}
+
+/* sidebar */
+.side{position:sticky;top:92px}
+.side h4{font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);margin-bottom:14px}
+.side ol{list-style:none;display:grid;gap:2px;counter-reset:d}
+.side a{display:block;padding:7px 12px;border-radius:8px;font-size:15px;color:var(--ink-2);border-left:2px solid transparent}
+.side a:hover{color:var(--ink);background:var(--card)}
+.side a[aria-current="page"]{color:var(--ink);background:var(--card);border-left-color:var(--lime)}
+/* mobile: a disclosure instead of a rail */
+.side-m{display:none}
+@media (max-width:900px){
+  .side{display:none}
+  .side-m{display:block;margin-bottom:28px}
+  .side-m summary{cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:12px;
+    font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);
+    border:1px solid var(--line);background:var(--card);border-radius:12px;padding:14px 16px}
+  .side-m summary::-webkit-details-marker{display:none}
+  .side-m summary::after{content:"+";color:var(--lime);font-size:20px;line-height:1}
+  .side-m[open] summary::after{content:"–"}
+  .side-m ol{list-style:none;display:grid;gap:2px;margin-top:8px}
+  .side-m a{display:block;padding:10px 16px;border-radius:8px;font-size:15px;color:var(--ink-2);border-left:2px solid transparent}
+  .side-m a[aria-current="page"]{color:var(--ink);background:var(--card);border-left-color:var(--lime)}
+}
+
+/* article */
+article{min-width:0;max-width:74ch}
+article h1{font-size:clamp(32px,4.6vw,44px);margin:10px 0 18px}
+article h2{font-size:clamp(22px,2.6vw,27px);margin:44px 0 14px;padding-top:26px;border-top:1px solid var(--line)}
+article h3{font-size:18px;margin:28px 0 10px}
+article p{color:var(--ink-2);margin:0 0 16px}
+article .lead{font-size:19px;color:var(--ink-2);margin-bottom:28px}
+article strong{color:var(--ink);font-weight:500}
+article a{color:var(--lime);text-decoration:underline;text-underline-offset:3px;text-decoration-thickness:1px;text-decoration-color:rgba(198,241,53,.4)}
+article a:hover{text-decoration-color:var(--lime)}
+article ul,article ol{color:var(--ink-2);margin:0 0 16px;padding-left:22px;display:grid;gap:8px}
+article li::marker{color:var(--ink-3)}
+article code{font-family:var(--mono);font-size:.88em;background:var(--card);border:1px solid var(--line);border-radius:5px;padding:1px 5px;color:var(--ink)}
+article pre{background:#050505;border:1px solid var(--line);border-radius:14px;padding:18px 20px;overflow-x:auto;margin:0 0 20px}
+article pre code{background:none;border:0;padding:0;font-size:13px;line-height:1.7;color:var(--ink-2)}
+article blockquote{border-left:2px solid var(--lime);background:var(--card);border-radius:0 12px 12px 0;padding:14px 18px;margin:0 0 20px}
+article blockquote p{margin:0;color:var(--ink-2)}
+article table{width:100%;border-collapse:collapse;font-size:14px;margin:0 0 20px;display:block;overflow-x:auto}
+article th,article td{text-align:left;padding:10px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+article th{font-family:var(--mono);font-size:12px;font-weight:400;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3)}
+article td{color:var(--ink-2)}
+article td code{white-space:nowrap}
+article hr{border:0;border-top:1px solid var(--line);margin:36px 0}
+
+/* prev / next */
+.pager{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-top:56px;padding-top:24px;border-top:1px solid var(--line)}
+.pager a{display:grid;gap:4px;color:var(--ink-2);font-size:15px;text-decoration:none}
+.pager span{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3)}
+.pager a:hover{color:var(--ink)}
+.pager .next{text-align:right;margin-left:auto}
+
+/* footer — identical to the landing footer */
+footer{border-top:1px solid var(--line);padding:56px 0 40px;color:var(--ink-2);font-size:14px}
+.foot{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:32px}
+.foot h4{font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);margin-bottom:14px}
+.foot ul{list-style:none;display:grid;gap:9px}
+.foot a:hover{color:var(--ink)}
+.foot-bottom{margin-top:48px;padding-top:20px;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;color:var(--ink-3);font-size:13px}
+@media (max-width:820px){.foot{grid-template-columns:1fr 1fr}}
+
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.btn{transition:none}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <nav>
+      <a class="logo" href="/" aria-label="Hirai App home">
+        <svg width="34" height="34" viewBox="0 0 512 512" aria-hidden="true" id="logo-mark"></svg>
+        <span>hora<span class="idot">i</span></span>
+      </a>
+      <div class="nav-links">
+        <a href="/#how">How it works</a>
+        <a href="/#why">Why Hirai App</a>
+        <a href="/#self-hosted">Self-hosted</a>
+        <a href="/#pricing">Pricing</a>
+        <a href="/docs/" class="here">Docs</a>
+      </div>
+      <a class="btn" href="/#">Start building</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap shell">
+  <aside class="side">
+    <h4>Docs</h4>
+    <ol><li><a href="/docs/getting-started/">Getting started</a></li><li><a href="/docs/building/" aria-current="page">Building</a></li><li><a href="/docs/iterating/">Iterating</a></li><li><a href="/docs/memory/">Memory</a></li><li><a href="/docs/models-and-keys/">Models and keys</a></li><li><a href="/docs/gateway/">Gateway</a></li><li><a href="/docs/self-hosted/">Self-hosted runtime</a></li><li><a href="/docs/usage-and-billing/">Usage and billing</a></li><li><a href="/docs/deploy-token/">Deploy a token</a></li><li><a href="/docs/faq/">FAQ</a></li></ol>
+  </aside>
+
+  <div style="min-width:0">
+    <details class="side-m">
+      <summary>Docs · Building</summary>
+      <ol><li><a href="/docs/getting-started/">Getting started</a></li><li><a href="/docs/building/" aria-current="page">Building</a></li><li><a href="/docs/iterating/">Iterating</a></li><li><a href="/docs/memory/">Memory</a></li><li><a href="/docs/models-and-keys/">Models and keys</a></li><li><a href="/docs/gateway/">Gateway</a></li><li><a href="/docs/self-hosted/">Self-hosted runtime</a></li><li><a href="/docs/usage-and-billing/">Usage and billing</a></li><li><a href="/docs/deploy-token/">Deploy a token</a></li><li><a href="/docs/faq/">FAQ</a></li></ol>
+    </details>
+
+    <article>
+      <div class="eyebrow">Building</div>
+      <h1>Building</h1>
+<p class="lead">Hirai App builds two things: working apps and landing pages. It decides which one you asked for before it writes a line, because they are not the same object.</p>
+
+<h2>Two deliverable classes</h2>
+<p>A landing page is read. An app is used. The difference changes the layout, the structure and what counts as finished.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Landing page</th>
+<th>App</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>What it is</td>
+<td>A page you scroll</td>
+<td>A tool you operate</td>
+</tr>
+<tr>
+<td>Structure</td>
+<td>Page sections top to bottom — hero, features, call to action</td>
+<td>Layout areas — a top bar, an input form, a list or table, summary figures</td>
+</tr>
+<tr>
+<td>Finished when</td>
+<td>It reads well and every section is filled with real copy</td>
+<td>You can put your own data in, it comes back out correct, and it survives a reload</td>
+</tr>
+</tbody></table>
+<p>Hirai App reads the class off your sentence. &quot;A landing page for a weekend market stall&quot; is a landing page. &quot;A bill splitter where I add people and items&quot; is an app, because you operate it. If your wording points both ways, the proposal card is where you correct it — say &quot;make it a landing page&quot; and it re-plans.</p>
+<h2>The proposal card</h2>
+<p>Every buildable request produces a card before anything runs. For an app it carries a design plan with three fields:</p>
+<ul>
+<li><strong>palette</strong> — one brand colour chosen for your subject, plus neutrals and an accent or two;</li>
+<li><strong>typography</strong> — a heading and body font pairing;</li>
+<li><strong>sections</strong> — three to five layout areas in reading order for an app, or page sections top to bottom for a landing page.</li>
+</ul>
+<p>Plus <strong>one question</strong>, when there is a real ambiguity worth a sentence of your time. Not a form — a single question, or none.</p>
+<p>The plan is a recommendation, not a contract. Say &quot;darker, and drop the chart&quot; and the next card says that. The plan is also an enhancement: if the model that writes it is slow or returns nothing usable, the card renders without it and the build still runs.</p>
+<p>The card is inert until you press <strong>Start</strong>. It is stored with the thread, so reloading the page brings it back as a card rather than as a paragraph, and a card you already started cannot start a second job.</p>
+<h2>What happens after Start</h2>
+<p>The agent writes a real multi-file project — components, styles, state, the lot — using a small set of file tools: it writes files, reads back what it wrote, and makes targeted edits. It is working in a real project directory, not emitting one long string.</p>
+<p>Then it builds and checks:</p>
+<ol>
+<li><strong>Build.</strong> The project is built with <code>npm run build</code> inside an isolated sandbox container off a pre-baked toolchain image, with <strong>no network access</strong>. Dependencies are already in the image, so a build cannot reach out and cannot be changed by anything outside it. A build that runs longer than 200 seconds is stopped.</li>
+<li><strong>Verify.</strong> The built output is loaded in Chrome and looked at. Not &quot;the build exited 0&quot; — the page has to actually render and paint. An app that answers HTTP 200 with a blank body is a failure, and it is caught here rather than by you.</li>
+<li><strong>Deploy.</strong> The verified output goes to a public URL on the app domain, and the full source is saved as a downloadable zip.</li>
+</ol>
+<p>Those three are what the <code>▸ build</code>, <code>▸ verify</code> and <code>▸ live</code> lines in the thread mean. Each appears when its stage finishes, not when it starts.</p>
+<h2>Attaching files</h2>
+<p>Files you attach to a message are available to the build. An image lands at <code>/uploads/&lt;name&gt;.&lt;ext&gt;</code> inside the project, so the agent can reference it directly:</p>
+<pre><code class="language-html">&lt;img src=&quot;/uploads/logo.png&quot; alt=&quot;Logo&quot;&gt;
+</code></pre>
+<p>A zip is unpacked into <code>/uploads/</code> and its contents are usable the same way.</p>
+<h2>What Hirai App does not build</h2>
+<p>It builds what runs in a browser: static sites and single-page apps — landing pages, dashboards, trackers, tools, calculators, small games. Anything needing its own server-side backend is outside what it produces.</p>
+<p>Hirai App does not generate images or video.</p>
+<h2>Next</h2>
+<p><a href="/docs/iterating/">Iterating</a> covers changing an app once it is live.</p>
+
+      <nav class="pager"><a class="prev" href="/docs/getting-started/"><span>Previous</span>Getting started</a><a class="next" href="/docs/iterating/"><span>Next</span>Iterating</a></nav>
+    </article>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div>
+        <div class="logo" style="font-size:20px"><svg width="26" height="26" viewBox="0 0 512 512" aria-hidden="true" id="logo-mark-2"></svg><span>hora<span class="idot">i</span></span></div>
+        <p style="margin-top:14px;max-width:32ch">One sentence in. A live web app out. Hosted, or on your own machine.</p>
+      </div>
+      <div><h4>Product</h4><ul><li><a href="/#how">How it works</a></li><li><a href="/#why">Why Hirai App</a></li><li><a href="/#pricing">Pricing</a></li><li><a href="/docs/">Docs</a></li></ul></div>
+      <div><h4>Run it yourself</h4><ul><li><a href="/#self-hosted">Self-hosted runtime</a></li><li><a href="/#faq">FAQ</a></li></ul></div>
+      <div><h4>Connect</h4><ul><li><a href="https://x.com/hiraiapp">X</a></li></ul></div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 Hirai App</span>
+      <span>hiraiapp.com</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  const GA = 137.508 * Math.PI/180;
+  const lerp=(a,b,t)=>a+(b-a)*t;
+  const hex=h=>[parseInt(h.slice(1,3),16),parseInt(h.slice(3,5),16),parseInt(h.slice(5,7),16)];
+  const mix=(a,b,t)=>`rgb(${lerp(a[0],b[0],t)|0},${lerp(a[1],b[1],t)|0},${lerp(a[2],b[2],t)|0})`;
+  const WHITE=hex('#F5F1E8'), LIME=hex('#C6F135');
+
+  // logo mark in nav/footer (static SVG) — identical generator to the landing page
+  function markSVG(el){
+    let s='';
+    for(let n=1;n<=150;n++){const th=n*GA,r=16.8*Math.sqrt(n),t=(n-1)/149;
+      s+=`<circle cx="${256+r*Math.cos(th)}" cy="${256+r*Math.sin(th)}" r="${4+7*t}" fill="${mix(WHITE,LIME,t)}"/>`;}
+    el.innerHTML=s;
+  }
+  markSVG(document.getElementById('logo-mark'));
+  markSVG(document.getElementById('logo-mark-2'));
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,20 @@
+<!-- The gyre mark as a scalable favicon. Geometry identical to docs/brand/gyrent/logomark/
+     gyrent-mark-primary.svg and to the <Gyre> component: six blades rx=10 ry=19 at (50,25),
+     each tilted 25deg, the group rotated k*60deg about (50,50); gold core r=12 over the top.
+
+     The colours are LITERALS here, unlike the component's var(--accent): a favicon is fetched as a
+     standalone document and never sees the page's stylesheet, so a var() would resolve to nothing
+     and render the mark black. It also carries its own #0A0A0A ground rather than transparency —
+     white blades on a transparent field disappear into a light browser tab. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <rect width="100" height="100" rx="22" fill="#0A0A0A"/>
+  <g fill="#FFFFFF">
+    <g transform="rotate(0 50 50)"><ellipse cx="50" cy="25" rx="10" ry="19" transform="rotate(25 50 25)"/></g>
+    <g transform="rotate(60 50 50)"><ellipse cx="50" cy="25" rx="10" ry="19" transform="rotate(25 50 25)"/></g>
+    <g transform="rotate(120 50 50)"><ellipse cx="50" cy="25" rx="10" ry="19" transform="rotate(25 50 25)"/></g>
+    <g transform="rotate(180 50 50)"><ellipse cx="50" cy="25" rx="10" ry="19" transform="rotate(25 50 25)"/></g>
+    <g transform="rotate(240 50 50)"><ellipse cx="50" cy="25" rx="10" ry="19" transform="rotate(25 50 25)"/></g>
+    <g transform="rotate(300 50 50)"><ellipse cx="50" cy="25" rx="10" ry="19" transform="rotate(25 50 25)"/></g>
+  </g>
+  <circle cx="50" cy="50" r="12" fill="#FFD166"/>
+</svg>

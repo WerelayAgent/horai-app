@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Self-hosted runtime — Hirai App docs</title>
+<meta name="description" content="Run the agent on your own machine, with the keys in a process that has no network.">
+<link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://hiraiapp.com/docs/self-hosted/">
+<meta property="og:title" content="Self-hosted runtime — Hirai App docs">
+<meta property="og:description" content="Run the agent on your own machine, with the keys in a process that has no network.">
+<meta property="og:image" content="https://hiraiapp.com/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@hiraiapp">
+<meta name="twitter:image" content="https://hiraiapp.com/og.png">
+<link rel="stylesheet" href="/fonts.css">
+<style>
+:root{
+  --bg:#000000;
+  --ink:#F5F1E8;
+  --ink-2:#A9A69E;
+  --ink-3:#5E5C57;
+  --line:#1C1C1A;
+  --card:#0B0B0A;
+  --lime:#C6F135;
+  --mint:#5DF0C2;
+  --sky:#7FB3FF;
+  --peach:#FFB4A2;
+  --violet:#B388FF;
+  --display:'Sora',system-ui,sans-serif;
+  --body:'DM Sans',system-ui,sans-serif;
+  --mono:'DM Mono',ui-monospace,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.55;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+:focus-visible{outline:2px solid var(--lime);outline-offset:3px;border-radius:4px}
+.wrap{width:min(1120px,calc(100% - 48px));margin:0 auto}
+h1,h2,h3{font-family:var(--display);font-weight:600;letter-spacing:-.02em;line-height:1.15}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--lime)}
+
+/* nav — same chrome as the landing */
+header{position:sticky;top:0;z-index:20;backdrop-filter:blur(14px);background:rgba(0,0,0,.72);border-bottom:1px solid var(--line)}
+nav{display:flex;align-items:center;justify-content:space-between;height:68px;gap:16px}
+.logo{display:flex;align-items:center;gap:12px;font-family:var(--display);font-weight:600;font-size:22px;letter-spacing:-.02em}
+.logo .idot{color:var(--lime)}
+.nav-links{display:flex;gap:28px;font-size:15px;color:var(--ink-2)}
+.nav-links a:hover{color:var(--ink)}
+.nav-links a.here{color:var(--ink)}
+.btn{display:inline-flex;align-items:center;gap:10px;white-space:nowrap;font-family:var(--display);font-weight:600;font-size:14px;padding:10px 16px;border-radius:999px;border:1px solid var(--lime);background:var(--lime);color:#0A0A0A;transition:background .15s ease}
+.btn:hover{background:#D6FF55}
+@media (max-width:900px){.nav-links{display:none}}
+
+/* shell */
+.shell{display:grid;grid-template-columns:236px minmax(0,1fr);gap:56px;align-items:start;padding:48px 0 96px}
+@media (max-width:900px){.shell{grid-template-columns:1fr;gap:0;padding:24px 0 72px}}
+
+/* sidebar */
+.side{position:sticky;top:92px}
+.side h4{font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);margin-bottom:14px}
+.side ol{list-style:none;display:grid;gap:2px;counter-reset:d}
+.side a{display:block;padding:7px 12px;border-radius:8px;font-size:15px;color:var(--ink-2);border-left:2px solid transparent}
+.side a:hover{color:var(--ink);background:var(--card)}
+.side a[aria-current="page"]{color:var(--ink);background:var(--card);border-left-color:var(--lime)}
+/* mobile: a disclosure instead of a rail */
+.side-m{display:none}
+@media (max-width:900px){
+  .side{display:none}
+  .side-m{display:block;margin-bottom:28px}
+  .side-m summary{cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:12px;
+    font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);
+    border:1px solid var(--line);background:var(--card);border-radius:12px;padding:14px 16px}
+  .side-m summary::-webkit-details-marker{display:none}
+  .side-m summary::after{content:"+";color:var(--lime);font-size:20px;line-height:1}
+  .side-m[open] summary::after{content:"–"}
+  .side-m ol{list-style:none;display:grid;gap:2px;margin-top:8px}
+  .side-m a{display:block;padding:10px 16px;border-radius:8px;font-size:15px;color:var(--ink-2);border-left:2px solid transparent}
+  .side-m a[aria-current="page"]{color:var(--ink);background:var(--card);border-left-color:var(--lime)}
+}
+
+/* article */
+article{min-width:0;max-width:74ch}
+article h1{font-size:clamp(32px,4.6vw,44px);margin:10px 0 18px}
+article h2{font-size:clamp(22px,2.6vw,27px);margin:44px 0 14px;padding-top:26px;border-top:1px solid var(--line)}
+article h3{font-size:18px;margin:28px 0 10px}
+article p{color:var(--ink-2);margin:0 0 16px}
+article .lead{font-size:19px;color:var(--ink-2);margin-bottom:28px}
+article strong{color:var(--ink);font-weight:500}
+article a{color:var(--lime);text-decoration:underline;text-underline-offset:3px;text-decoration-thickness:1px;text-decoration-color:rgba(198,241,53,.4)}
+article a:hover{text-decoration-color:var(--lime)}
+article ul,article ol{color:var(--ink-2);margin:0 0 16px;padding-left:22px;display:grid;gap:8px}
+article li::marker{color:var(--ink-3)}
+article code{font-family:var(--mono);font-size:.88em;background:var(--card);border:1px solid var(--line);border-radius:5px;padding:1px 5px;color:var(--ink)}
+article pre{background:#050505;border:1px solid var(--line);border-radius:14px;padding:18px 20px;overflow-x:auto;margin:0 0 20px}
+article pre code{background:none;border:0;padding:0;font-size:13px;line-height:1.7;color:var(--ink-2)}
+article blockquote{border-left:2px solid var(--lime);background:var(--card);border-radius:0 12px 12px 0;padding:14px 18px;margin:0 0 20px}
+article blockquote p{margin:0;color:var(--ink-2)}
+article table{width:100%;border-collapse:collapse;font-size:14px;margin:0 0 20px;display:block;overflow-x:auto}
+article th,article td{text-align:left;padding:10px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+article th{font-family:var(--mono);font-size:12px;font-weight:400;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3)}
+article td{color:var(--ink-2)}
+article td code{white-space:nowrap}
+article hr{border:0;border-top:1px solid var(--line);margin:36px 0}
+
+/* prev / next */
+.pager{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-top:56px;padding-top:24px;border-top:1px solid var(--line)}
+.pager a{display:grid;gap:4px;color:var(--ink-2);font-size:15px;text-decoration:none}
+.pager span{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3)}
+.pager a:hover{color:var(--ink)}
+.pager .next{text-align:right;margin-left:auto}
+
+/* footer — identical to the landing footer */
+footer{border-top:1px solid var(--line);padding:56px 0 40px;color:var(--ink-2);font-size:14px}
+.foot{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:32px}
+.foot h4{font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);margin-bottom:14px}
+.foot ul{list-style:none;display:grid;gap:9px}
+.foot a:hover{color:var(--ink)}
+.foot-bottom{margin-top:48px;padding-top:20px;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;color:var(--ink-3);font-size:13px}
+@media (max-width:820px){.foot{grid-template-columns:1fr 1fr}}
+
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.btn{transition:none}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <nav>
+      <a class="logo" href="/" aria-label="Hirai App home">
+        <svg width="34" height="34" viewBox="0 0 512 512" aria-hidden="true" id="logo-mark"></svg>
+        <span>hora<span class="idot">i</span></span>
+      </a>
+      <div class="nav-links">
+        <a href="/#how">How it works</a>
+        <a href="/#why">Why Hirai App</a>
+        <a href="/#self-hosted">Self-hosted</a>
+        <a href="/#pricing">Pricing</a>
+        <a href="/docs/" class="here">Docs</a>
+      </div>
+      <a class="btn" href="/#">Start building</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap shell">
+  <aside class="side">
+    <h4>Docs</h4>
+    <ol><li><a href="/docs/getting-started/">Getting started</a></li><li><a href="/docs/building/">Building</a></li><li><a href="/docs/iterating/">Iterating</a></li><li><a href="/docs/memory/">Memory</a></li><li><a href="/docs/models-and-keys/">Models and keys</a></li><li><a href="/docs/gateway/">Gateway</a></li><li><a href="/docs/self-hosted/" aria-current="page">Self-hosted runtime</a></li><li><a href="/docs/usage-and-billing/">Usage and billing</a></li><li><a href="/docs/deploy-token/">Deploy a token</a></li><li><a href="/docs/faq/">FAQ</a></li></ol>
+  </aside>
+
+  <div style="min-width:0">
+    <details class="side-m">
+      <summary>Docs · Self-hosted runtime</summary>
+      <ol><li><a href="/docs/getting-started/">Getting started</a></li><li><a href="/docs/building/">Building</a></li><li><a href="/docs/iterating/">Iterating</a></li><li><a href="/docs/memory/">Memory</a></li><li><a href="/docs/models-and-keys/">Models and keys</a></li><li><a href="/docs/gateway/">Gateway</a></li><li><a href="/docs/self-hosted/" aria-current="page">Self-hosted runtime</a></li><li><a href="/docs/usage-and-billing/">Usage and billing</a></li><li><a href="/docs/deploy-token/">Deploy a token</a></li><li><a href="/docs/faq/">FAQ</a></li></ol>
+    </details>
+
+    <article>
+      <div class="eyebrow">Self-hosted</div>
+      <h1>Self-hosted runtime</h1>
+<p class="lead">Hirai App also ships as something you run yourself: an agent that holds its own wallets, signs its own transactions, and calls this platform for the parts it does not do locally. It installs as two systemd services on one Linux box.</p>
+
+<p>This is a different product surface from the hosted app. Nothing here talks to your account in the browser — the connection between them is a gateway key you paste in, and the <code>build</code> tool that key unlocks.</p>
+<h2>Two processes, and why it is two</h2>
+<pre><code>hiraiapp-signer    holds the keys, enforces the policy, signs
+hiraiapp-agent     runs the model loop, the sandbox, the channels
+</code></pre>
+<p>They run as two separate OS accounts that cannot read each other&#39;s files, and they speak over a unix socket owned by a shared group. The split is the whole design:</p>
+<ul>
+<li><strong>The signer has no network.</strong> Its unit sets <code>RestrictAddressFamilies=AF_UNIX</code>, so the kernel refuses to give it a TCP socket at all. Even fully compromised, the process holding your keys has nowhere to send them.</li>
+<li><strong>The agent has no keys.</strong> Its unit sets <code>ProtectHome=true</code>, so it cannot read the signer&#39;s home directory — where the encrypted key material lives — and the filesystem permissions say the same thing a second time.</li>
+<li><strong>The agent cannot restart the signer.</strong> It depends on it and cannot control it.</li>
+</ul>
+<p>The agent is the part that reads untrusted input: model output, web pages, messages from a channel. It is arranged so that being wrong there costs you an API bill rather than a wallet.</p>
+<h2>What the signer will and will not do</h2>
+<p>The socket exposes a fixed set of operations. Everything else is not disabled by permission — it does not exist in the process:</p>
+<pre><code>operations that exist               operations that do not exist, at any permission level
+  getAddress                          exportKey
+  createWallet                        exportPrivateKey
+  signTransaction.transfer            getPrivateKey
+  signTransaction.swap                revealMnemonic
+  signTransaction.deployToken         dumpKeystore
+  useTool.build                       signRaw
+  useTool.read
+</code></pre>
+<p><code>signRaw</code> is absent on purpose. An agent that can sign arbitrary bytes can sign anything, and every cap above it becomes decoration.</p>
+<p>Key export exists, as a command a person runs on the box. It is not reachable from the agent, from any channel, or from any model tool — the module that performs it is not linked into the process that serves the socket. Run <code>hiraiapp doctor</code> on your own machine and it prints these lists, so you can check the claim rather than trust it.</p>
+<h2>Install</h2>
+<p>Two lines, as root, on a fresh Linux box:</p>
+<pre><code class="language-bash">curl -fsSO https://hiraiapp.com/hiraiapp.tar.gz
+mkdir -p /opt/hiraiapp &amp;&amp; tar -xzf hiraiapp.tar.gz -C /opt/hiraiapp &amp;&amp; bash /opt/hiraiapp/packaging/install.sh
+</code></pre>
+<p>Unpack into <code>/opt/hiraiapp</code> rather than wherever you are standing. The signer runs as its own account and every directory above the code has to be traversable by it — a root shell starts in <code>/root</code>, which is mode <code>0700</code>. The installer checks this by having each account actually open a file, and refuses with the reason rather than leaving you a service that crash-loops while <code>systemctl</code> reports it active.</p>
+<p>It creates the two accounts, the shared group, the key directory, the run directory and both units, then prints the next steps. It does not start anything.</p>
+<h2>First run</h2>
+<p>Set the key-encryption key and start the signer. The key that encrypts your wallet keys lives in a systemd drop-in, not in a file in the repository:</p>
+<pre><code class="language-bash">systemctl edit hiraiapp-signer.service
+  [Service]
+  Environment=HORAI_SIGNER_KEK=&lt;32 random bytes, hex&gt;
+
+systemctl enable --now hiraiapp-signer.service
+</code></pre>
+<p>Then run the guided setup, which creates the seed, shows it once, and asks for your caps, your allowlist and your permissions:</p>
+<pre><code class="language-bash">sudo -u hiraiapp-signer HORAI_SIGNER_KEK=&lt;your-kek&gt; HOME=/home/hiraiapp-signer hiraiapp setup
+</code></pre>
+<p>The <code>sudo -u</code> prefix matters. The CLI opens the signer&#39;s database directly and that database lives in the signer&#39;s home — run it as root and you quietly configure a different one under <code>/root</code>, then enforce the other. Commands that only read the machine&#39;s layout, like <code>doctor</code>, do not need it.</p>
+<pre><code class="language-bash">hiraiapp doctor
+</code></pre>
+<p><code>doctor</code> prints the accounts, the key directory and its mode, whether the socket exists, whether the signer answers, and the two operation lists above. On a fresh install it reports the socket as not found until you start the service, which is the correct answer rather than an error.</p>
+<h2>Giving it a model</h2>
+<p>The agent reads its inference keys from a drop-in on its own unit:</p>
+<pre><code class="language-bash">systemctl edit hiraiapp-agent.service
+  [Service]
+  Environment=HORAI_API_KEY=hiraiapp_your_gateway_key
+</code></pre>
+<p>That is a <a href="/docs/gateway/">gateway key</a> from this platform, and it gives the runtime the same router the hosted chat uses, billed to the same balance. Your own provider key works instead, and the two can coexist:</p>
+<pre><code>Environment=HORAI_ANTHROPIC_API_KEY=sk-ant-...
+</code></pre>
+<p>Never put <code>HORAI_SIGNER_KEK</code> in the agent&#39;s drop-in. A leaked inference key costs an API bill; the key-encryption key costs the wallet.</p>
+<p><code>HORAI_API_BASE</code> points the runtime at a different platform origin. It accepts <code>https</code> anywhere and <code>http</code> only on loopback, and a value it will not accept is refused rather than quietly ignored — falling back would send your key somewhere you did not choose.</p>
+<h2>Policy</h2>
+<p>The policy is what the signer enforces before it signs. You choose it during <code>setup</code>, and you read it back with:</p>
+<pre><code class="language-bash">sudo -u hiraiapp-signer HORAI_SIGNER_KEK=&lt;your-kek&gt; HOME=/home/hiraiapp-signer hiraiapp policy show
+</code></pre>
+<p>It prints in two groups, and the grouping is the point:</p>
+<ul>
+<li><strong>Caps enforced on the transaction itself.</strong> Native value, gas, and fees, read by the signer out of the bytes it is about to sign. These hold even if the agent is entirely compromised.</li>
+<li><strong>Caps enforced on a number the agent declares.</strong> Per-transaction and rolling daily USD. The signer has no price feed and cannot check them, so they protect you from an honest agent&#39;s mistakes and not from a dishonest one. Set the first group as your real limit.</li>
+</ul>
+<p>Below those sit the permission switches — signing, transfers, swaps, token deploys, wallet creation, tool use — and a recipient allowlist. A fresh install has every cap at zero, every permission off, and an empty allowlist, so it can do nothing until you decide otherwise.</p>
+<p>Two rules shape how it changes:</p>
+<ul>
+<li><strong>Until one transaction lands, caps may only go down.</strong> You cannot raise a limit you have never exercised.</li>
+<li><strong><code>hiraiapp policy lock</code> freezes it.</strong> After that the running agent can no longer alter its own constraints.</li>
+</ul>
+<h2>The build tool</h2>
+<p>With a gateway key configured, the runtime can build and deploy an app the same way the hosted chat does. A sentence goes in, the job streams back, and the source archive lands in the working directory:</p>
+<pre><code>▸ proposal  e970dfbd-86b4-4e51-9eed-8f904eb174e7
+▸ queued
+▸ executing
+▸ settled
+▸ saved  splitbill-source.zip  (20796 bytes)
+▸ live   https://apps.hiraiapp.com/splitbill/
+</code></pre>
+<p>The tool is governed by the policy — it runs only when tool use is permitted, and the signer decides that over the socket, in the other process. It also cannot reach the signer at all: it carries <code>fetch</code>, a place to print, and nothing else. That is enforced by a test that walks its import graph and fails if the signer client is reachable through any path, because everything this tool touches — the sentence, the job&#39;s status strings, the URLs in the response — arrives from outside.</p>
+<h2>Cross-chain routes and <code>refundTo</code></h2>
+<p>Routes that cross chains go through Relay, and every quote the runtime requests sets <code>refundTo</code> to an address on the origin chain.</p>
+<p>It is required rather than optional here. Without it the route falls back to the recipient, which is an address on the <em>destination</em> chain — and a route that fails after the origin leg would refund to a chain the money never reached. The address kind is validated against the origin chain before the quote is requested, so a Solana address on an EVM origin is rejected at the call rather than discovered during a refund.</p>
+
+      <nav class="pager"><a class="prev" href="/docs/gateway/"><span>Previous</span>Gateway</a><a class="next" href="/docs/usage-and-billing/"><span>Next</span>Usage and billing</a></nav>
+    </article>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div>
+        <div class="logo" style="font-size:20px"><svg width="26" height="26" viewBox="0 0 512 512" aria-hidden="true" id="logo-mark-2"></svg><span>hora<span class="idot">i</span></span></div>
+        <p style="margin-top:14px;max-width:32ch">One sentence in. A live web app out. Hosted, or on your own machine.</p>
+      </div>
+      <div><h4>Product</h4><ul><li><a href="/#how">How it works</a></li><li><a href="/#why">Why Hirai App</a></li><li><a href="/#pricing">Pricing</a></li><li><a href="/docs/">Docs</a></li></ul></div>
+      <div><h4>Run it yourself</h4><ul><li><a href="/#self-hosted">Self-hosted runtime</a></li><li><a href="/#faq">FAQ</a></li></ul></div>
+      <div><h4>Connect</h4><ul><li><a href="https://x.com/hiraiapp">X</a></li></ul></div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 Hirai App</span>
+      <span>hiraiapp.com</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  const GA = 137.508 * Math.PI/180;
+  const lerp=(a,b,t)=>a+(b-a)*t;
+  const hex=h=>[parseInt(h.slice(1,3),16),parseInt(h.slice(3,5),16),parseInt(h.slice(5,7),16)];
+  const mix=(a,b,t)=>`rgb(${lerp(a[0],b[0],t)|0},${lerp(a[1],b[1],t)|0},${lerp(a[2],b[2],t)|0})`;
+  const WHITE=hex('#F5F1E8'), LIME=hex('#C6F135');
+
+  // logo mark in nav/footer (static SVG) — identical generator to the landing page
+  function markSVG(el){
+    let s='';
+    for(let n=1;n<=150;n++){const th=n*GA,r=16.8*Math.sqrt(n),t=(n-1)/149;
+      s+=`<circle cx="${256+r*Math.cos(th)}" cy="${256+r*Math.sin(th)}" r="${4+7*t}" fill="${mix(WHITE,LIME,t)}"/>`;}
+    el.innerHTML=s;
+  }
+  markSVG(document.getElementById('logo-mark'));
+  markSVG(document.getElementById('logo-mark-2'));
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Models and keys — Hirai App docs</title>
+<meta name="description" content="Auto routing picks the cheapest capable model. Bring your own provider key and nothing here is debited.">
+<link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://hiraiapp.com/docs/models-and-keys/">
+<meta property="og:title" content="Models and keys — Hirai App docs">
+<meta property="og:description" content="Auto routing picks the cheapest capable model. Bring your own provider key and nothing here is debited.">
+<meta property="og:image" content="https://hiraiapp.com/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@hiraiapp">
+<meta name="twitter:image" content="https://hiraiapp.com/og.png">
+<link rel="stylesheet" href="/fonts.css">
+<style>
+:root{
+  --bg:#000000;
+  --ink:#F5F1E8;
+  --ink-2:#A9A69E;
+  --ink-3:#5E5C57;
+  --line:#1C1C1A;
+  --card:#0B0B0A;
+  --lime:#C6F135;
+  --mint:#5DF0C2;
+  --sky:#7FB3FF;
+  --peach:#FFB4A2;
+  --violet:#B388FF;
+  --display:'Sora',system-ui,sans-serif;
+  --body:'DM Sans',system-ui,sans-serif;
+  --mono:'DM Mono',ui-monospace,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.55;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+:focus-visible{outline:2px solid var(--lime);outline-offset:3px;border-radius:4px}
+.wrap{width:min(1120px,calc(100% - 48px));margin:0 auto}
+h1,h2,h3{font-family:var(--display);font-weight:600;letter-spacing:-.02em;line-height:1.15}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--lime)}
+
+/* nav — same chrome as the landing */
+header{position:sticky;top:0;z-index:20;backdrop-filter:blur(14px);background:rgba(0,0,0,.72);border-bottom:1px solid var(--line)}
+nav{display:flex;align-items:center;justify-content:space-between;height:68px;gap:16px}
+.logo{display:flex;align-items:center;gap:12px;font-family:var(--display);font-weight:600;font-size:22px;letter-spacing:-.02em}
+.logo .idot{color:var(--lime)}
+.nav-links{display:flex;gap:28px;font-size:15px;color:var(--ink-2)}
+.nav-links a:hover{color:var(--ink)}
+.nav-links a.here{color:var(--ink)}
+.btn{display:inline-flex;align-items:center;gap:10px;white-space:nowrap;font-family:var(--display);font-weight:600;font-size:14px;padding:10px 16px;border-radius:999px;border:1px solid var(--lime);background:var(--lime);color:#0A0A0A;transition:background .15s ease}
+.btn:hover{background:#D6FF55}
+@media (max-width:900px){.nav-links{display:none}}
+
+/* shell */
+.shell{display:grid;grid-template-columns:236px minmax(0,1fr);gap:56px;align-items:start;padding:48px 0 96px}
+@media (max-width:900px){.shell{grid-template-columns:1fr;gap:0;padding:24px 0 72px}}
+
+/* sidebar */
+.side{position:sticky;top:92px}
+.side h4{font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);margin-bottom:14px}
+.side ol{list-style:none;display:grid;gap:2px;counter-reset:d}
+.side a{display:block;padding:7px 12px;border-radius:8px;font-size:15px;color:var(--ink-2);border-left:2px solid transparent}
+.side a:hover{color:var(--ink);background:var(--card)}
+.side a[aria-current="page"]{color:var(--ink);background:var(--card);border-left-color:var(--lime)}
+/* mobile: a disclosure instead of a rail */
+.side-m{display:none}
+@media (max-width:900px){
+  .side{display:none}
+  .side-m{display:block;margin-bottom:28px}
+  .side-m summary{cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:12px;
+    font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);
+    border:1px solid var(--line);background:var(--card);border-radius:12px;padding:14px 16px}
+  .side-m summary::-webkit-details-marker{display:none}
+  .side-m summary::after{content:"+";color:var(--lime);font-size:20px;line-height:1}
+  .side-m[open] summary::after{content:"–"}
+  .side-m ol{list-style:none;display:grid;gap:2px;margin-top:8px}
+  .side-m a{display:block;padding:10px 16px;border-radius:8px;font-size:15px;color:var(--ink-2);border-left:2px solid transparent}
+  .side-m a[aria-current="page"]{color:var(--ink);background:var(--card);border-left-color:var(--lime)}
+}
+
+/* article */
+article{min-width:0;max-width:74ch}
+article h1{font-size:clamp(32px,4.6vw,44px);margin:10px 0 18px}
+article h2{font-size:clamp(22px,2.6vw,27px);margin:44px 0 14px;padding-top:26px;border-top:1px solid var(--line)}
+article h3{font-size:18px;margin:28px 0 10px}
+article p{color:var(--ink-2);margin:0 0 16px}
+article .lead{font-size:19px;color:var(--ink-2);margin-bottom:28px}
+article strong{color:var(--ink);font-weight:500}
+article a{color:var(--lime);text-decoration:underline;text-underline-offset:3px;text-decoration-thickness:1px;text-decoration-color:rgba(198,241,53,.4)}
+article a:hover{text-decoration-color:var(--lime)}
+article ul,article ol{color:var(--ink-2);margin:0 0 16px;padding-left:22px;display:grid;gap:8px}
+article li::marker{color:var(--ink-3)}
+article code{font-family:var(--mono);font-size:.88em;background:var(--card);border:1px solid var(--line);border-radius:5px;padding:1px 5px;color:var(--ink)}
+article pre{background:#050505;border:1px solid var(--line);border-radius:14px;padding:18px 20px;overflow-x:auto;margin:0 0 20px}
+article pre code{background:none;border:0;padding:0;font-size:13px;line-height:1.7;color:var(--ink-2)}
+article blockquote{border-left:2px solid var(--lime);background:var(--card);border-radius:0 12px 12px 0;padding:14px 18px;margin:0 0 20px}
+article blockquote p{margin:0;color:var(--ink-2)}
+article table{width:100%;border-collapse:collapse;font-size:14px;margin:0 0 20px;display:block;overflow-x:auto}
+article th,article td{text-align:left;padding:10px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+article th{font-family:var(--mono);font-size:12px;font-weight:400;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3)}
+article td{color:var(--ink-2)}
+article td code{white-space:nowrap}
+article hr{border:0;border-top:1px solid var(--line);margin:36px 0}
+
+/* prev / next */
+.pager{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-top:56px;padding-top:24px;border-top:1px solid var(--line)}
+.pager a{display:grid;gap:4px;color:var(--ink-2);font-size:15px;text-decoration:none}
+.pager span{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3)}
+.pager a:hover{color:var(--ink)}
+.pager .next{text-align:right;margin-left:auto}
+
+/* footer — identical to the landing footer */
+footer{border-top:1px solid var(--line);padding:56px 0 40px;color:var(--ink-2);font-size:14px}
+.foot{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:32px}
+.foot h4{font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);margin-bottom:14px}
+.foot ul{list-style:none;display:grid;gap:9px}
+.foot a:hover{color:var(--ink)}
+.foot-bottom{margin-top:48px;padding-top:20px;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;color:var(--ink-3);font-size:13px}
+@media (max-width:820px){.foot{grid-template-columns:1fr 1fr}}
+
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.btn{transition:none}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <nav>
+      <a class="logo" href="/" aria-label="Hirai App home">
+        <svg width="34" height="34" viewBox="0 0 512 512" aria-hidden="true" id="logo-mark"></svg>
+        <span>hora<span class="idot">i</span></span>
+      </a>
+      <div class="nav-links">
+        <a href="/#how">How it works</a>
+        <a href="/#why">Why Hirai App</a>
+        <a href="/#self-hosted">Self-hosted</a>
+        <a href="/#pricing">Pricing</a>
+        <a href="/docs/" class="here">Docs</a>
+      </div>
+      <a class="btn" href="/#">Start building</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap shell">
+  <aside class="side">
+    <h4>Docs</h4>
+    <ol><li><a href="/docs/getting-started/">Getting started</a></li><li><a href="/docs/building/">Building</a></li><li><a href="/docs/iterating/">Iterating</a></li><li><a href="/docs/memory/">Memory</a></li><li><a href="/docs/models-and-keys/" aria-current="page">Models and keys</a></li><li><a href="/docs/gateway/">Gateway</a></li><li><a href="/docs/self-hosted/">Self-hosted runtime</a></li><li><a href="/docs/usage-and-billing/">Usage and billing</a></li><li><a href="/docs/deploy-token/">Deploy a token</a></li><li><a href="/docs/faq/">FAQ</a></li></ol>
+  </aside>
+
+  <div style="min-width:0">
+    <details class="side-m">
+      <summary>Docs · Models and keys</summary>
+      <ol><li><a href="/docs/getting-started/">Getting started</a></li><li><a href="/docs/building/">Building</a></li><li><a href="/docs/iterating/">Iterating</a></li><li><a href="/docs/memory/">Memory</a></li><li><a href="/docs/models-and-keys/" aria-current="page">Models and keys</a></li><li><a href="/docs/gateway/">Gateway</a></li><li><a href="/docs/self-hosted/">Self-hosted runtime</a></li><li><a href="/docs/usage-and-billing/">Usage and billing</a></li><li><a href="/docs/deploy-token/">Deploy a token</a></li><li><a href="/docs/faq/">FAQ</a></li></ol>
+    </details>
+
+    <article>
+      <div class="eyebrow">Models and keys</div>
+      <h1>Models and keys</h1>
+<p class="lead">You can let Hirai App choose the model, or pin one. Either way, if you bring your own provider key, your calls run on it and nothing here is debited.</p>
+
+<h2>Picking a model</h2>
+<p>The composer shows the current route as a small chip. Open the model picker and you get a single list grouped by provider, with the price per million tokens next to each model.</p>
+<p>Two ways to choose:</p>
+<ul>
+<li><strong>Auto</strong> — the router picks the cheapest model that can actually do the task in front of it. This is the default.</li>
+<li><strong>Pin one</strong> — name a model and the router tries it first.</li>
+</ul>
+<p>A model with no published price never appears in the list and never runs. Hirai App does not spend your balance at a rate it cannot state.</p>
+<h2>What &quot;cheapest capable&quot; means</h2>
+<p>Auto is not &quot;cheapest model&quot;. It is the cheapest model that has the capability the current task needs, and different steps of one job need different things:</p>
+<table>
+<thead>
+<tr>
+<th>Capability</th>
+<th>Needed for</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>chat</code></td>
+<td>replying in the thread</td>
+</tr>
+<tr>
+<td><code>parse</code></td>
+<td>reading your sentence into a deliverable</td>
+</tr>
+<tr>
+<td><code>vision</code></td>
+<td>looking at an image you attached</td>
+</tr>
+<tr>
+<td><code>planner</code></td>
+<td>running the build loop, which requires tool calling</td>
+</tr>
+</tbody></table>
+<p>A model that cannot call tools is never chosen to run a build, however cheap it is. If nothing available can do the task, you get a stated error naming what is missing rather than a quietly weaker model.</p>
+<h2>Bringing your own key</h2>
+<p>Add keys in <strong>Settings → Keys</strong> for the providers you already pay:</p>
+<ul>
+<li>Anthropic</li>
+<li>DeepSeek</li>
+<li>Groq</li>
+<li>Mistral</li>
+<li>OpenAI</li>
+<li>OpenRouter</li>
+</ul>
+<p>With a key stored, every route that provider can serve runs on your key, at your provider&#39;s own rate, and <strong>nothing is debited here</strong> — not for chat, not for builds. The usage is still recorded so your own history stays complete.</p>
+<p>Anthropic is available on your own key only. There is no shared Anthropic key, so Claude models appear in your picker once you add an Anthropic key and not before.</p>
+<p>What a key unlocks depends on what that provider actually offers. A key for a provider with no vision model does not give you vision — and the answer you get is an error saying so, not a substitute.</p>
+<h2>How keys are stored</h2>
+<p>A provider key is encrypted at rest with <strong>AES-256-GCM</strong>, under a key-encryption key that lives outside the database.</p>
+<p>Once saved, a key is never shown again. Settings displays it as a badge — the provider name and the fact that a key is present — and nothing more. There is no reveal button, because there is nothing to reveal: what is stored is ciphertext.</p>
+<p>Delete a key and its routes stop being available to you immediately.</p>
+<h2>The BYOK badge</h2>
+<p>Where a route runs on your key, the model name carries a small lime dot and the words <code>on your key</code>. That marker is your confirmation that the call was not billed here, and it appears in the composer chip and on the cost lines in a job.</p>
+<h2>Next</h2>
+<p><a href="/docs/gateway/">Gateway</a> is the same router with an OpenAI-compatible endpoint in front of it.</p>
+
+      <nav class="pager"><a class="prev" href="/docs/memory/"><span>Previous</span>Memory</a><a class="next" href="/docs/gateway/"><span>Next</span>Gateway</a></nav>
+    </article>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div>
+        <div class="logo" style="font-size:20px"><svg width="26" height="26" viewBox="0 0 512 512" aria-hidden="true" id="logo-mark-2"></svg><span>hora<span class="idot">i</span></span></div>
+        <p style="margin-top:14px;max-width:32ch">One sentence in. A live web app out. Hosted, or on your own machine.</p>
+      </div>
+      <div><h4>Product</h4><ul><li><a href="/#how">How it works</a></li><li><a href="/#why">Why Hirai App</a></li><li><a href="/#pricing">Pricing</a></li><li><a href="/docs/">Docs</a></li></ul></div>
+      <div><h4>Run it yourself</h4><ul><li><a href="/#self-hosted">Self-hosted runtime</a></li><li><a href="/#faq">FAQ</a></li></ul></div>
+      <div><h4>Connect</h4><ul><li><a href="https://x.com/hiraiapp">X</a></li></ul></div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 Hirai App</span>
+      <span>hiraiapp.com</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  const GA = 137.508 * Math.PI/180;
+  const lerp=(a,b,t)=>a+(b-a)*t;
+  const hex=h=>[parseInt(h.slice(1,3),16),parseInt(h.slice(3,5),16),parseInt(h.slice(5,7),16)];
+  const mix=(a,b,t)=>`rgb(${lerp(a[0],b[0],t)|0},${lerp(a[1],b[1],t)|0},${lerp(a[2],b[2],t)|0})`;
+  const WHITE=hex('#F5F1E8'), LIME=hex('#C6F135');
+
+  // logo mark in nav/footer (static SVG) — identical generator to the landing page
+  function markSVG(el){
+    let s='';
+    for(let n=1;n<=150;n++){const th=n*GA,r=16.8*Math.sqrt(n),t=(n-1)/149;
+      s+=`<circle cx="${256+r*Math.cos(th)}" cy="${256+r*Math.sin(th)}" r="${4+7*t}" fill="${mix(WHITE,LIME,t)}"/>`;}
+    el.innerHTML=s;
+  }
+  markSVG(document.getElementById('logo-mark'));
+  markSVG(document.getElementById('logo-mark-2'));
+})();
+</script>
+</body>
+</html>

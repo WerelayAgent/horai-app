@@ -1,0 +1,510 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hirai App — one sentence, a live web app</title>
+<meta name="description" content="Describe what you want. Hirai App builds it, deploys it, and hands you the source. Run it hosted, or run the agent on your own machine with your own keys.">
+<link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://hiraiapp.com/">
+<meta property="og:title" content="Hirai App — one sentence, a live web app">
+<meta property="og:description" content="Describe what you want. Hirai App builds it, deploys it, and hands you the source. Run it hosted, or run the agent on your own machine with your own keys.">
+<meta property="og:image" content="https://hiraiapp.com/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@hiraiapp">
+<meta name="twitter:image" content="https://hiraiapp.com/og.png">
+<link rel="stylesheet" href="/fonts.css">
+<style>
+:root{
+  --bg:#000000;
+  --ink:#F5F1E8;
+  --ink-2:#A9A69E;
+  --ink-3:#5E5C57;
+  --line:#1C1C1A;
+  --card:#0B0B0A;
+  --lime:#C6F135;
+  --mint:#5DF0C2;
+  --sky:#7FB3FF;
+  --peach:#FFB4A2;
+  --violet:#B388FF;
+  --display:'Sora',system-ui,sans-serif;
+  --body:'DM Sans',system-ui,sans-serif;
+  --mono:'DM Mono',ui-monospace,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.55;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+:focus-visible{outline:2px solid var(--lime);outline-offset:3px;border-radius:4px}
+.wrap{width:min(1120px,calc(100% - 48px));margin:0 auto}
+h1,h2,h3{font-family:var(--display);font-weight:600;letter-spacing:-.02em;line-height:1.05}
+h1{font-size:clamp(40px,7vw,84px)}
+h2{font-size:clamp(30px,4.2vw,50px)}
+h3{font-size:20px;font-weight:600;line-height:1.3}
+p.lead{font-size:clamp(17px,1.6vw,21px);color:var(--ink-2);max-width:56ch}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--lime)}
+.btn{display:inline-flex;align-items:center;gap:10px;white-space:nowrap;font-family:var(--display);font-weight:600;font-size:15px;padding:14px 22px;border-radius:999px;border:1px solid var(--line);transition:transform .15s ease,background .15s ease,border-color .15s ease}
+.btn:hover{transform:translateY(-1px)}
+.btn.primary{background:var(--lime);color:#0A0A0A;border-color:var(--lime)}
+.btn.primary:hover{background:#D6FF55}
+.btn.ghost{background:transparent;color:var(--ink);border-color:#2A2A28}
+.btn.ghost:hover{border-color:var(--ink-3)}
+
+/* nav */
+header{position:sticky;top:0;z-index:20;backdrop-filter:blur(14px);background:rgba(0,0,0,.72);border-bottom:1px solid var(--line)}
+nav{display:flex;align-items:center;justify-content:space-between;height:68px}
+.logo{display:flex;align-items:center;gap:12px;font-family:var(--display);font-weight:600;font-size:22px;letter-spacing:-.02em}
+.logo .idot{color:var(--lime)}
+.nav-links{display:flex;gap:28px;font-size:15px;color:var(--ink-2)}
+.nav-links a:hover{color:var(--ink)}
+.nav-cta{display:flex;gap:10px;align-items:center}
+.nav-cta .btn{padding:10px 16px;font-size:14px}
+@media (max-width:820px){.nav-links{display:none}}
+@media (max-width:520px){.nav-cta .btn.ghost{display:none}.nav-cta .btn{padding:9px 14px;font-size:13px}}
+
+/* hero */
+.hero{position:relative;overflow:hidden;padding:96px 0 72px;min-height:min(92vh,880px);display:flex;align-items:center}
+.hero-field{position:absolute;inset:0;z-index:0;touch-action:manipulation}
+.hero-field canvas{width:100%;height:100%;display:block}
+.hero-inner{position:relative;z-index:1;pointer-events:none;display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:center}
+.hero-copy{max-width:640px;pointer-events:auto}
+.hero-copy h1{margin:18px 0 22px}
+.hero-copy h1 .accent{color:var(--lime)}
+.hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:32px}
+.hero-note{margin-top:22px;font-family:var(--mono);font-size:13px;color:var(--ink-3)}
+@media (max-width:900px){.hero{min-height:auto;padding:56px 0 40px;display:flex;flex-direction:column}.hero-inner{grid-template-columns:1fr}.hero-field{position:relative;inset:auto;height:300px;margin-top:40px;order:2;width:100%}}
+
+/* section chrome */
+section{padding:104px 0;border-top:1px solid var(--line)}
+.sec-head{display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:end;margin-bottom:56px}
+.sec-head h2{margin-top:14px}
+@media (max-width:820px){.sec-head{grid-template-columns:1fr;gap:16px}section{padding:72px 0}}
+
+/* proof: self-hosted architecture */
+.proof{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center}
+.proof-copy p{color:var(--ink-2);margin-top:16px;max-width:52ch}
+.arch{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:28px;font-family:var(--mono);font-size:13px}
+.arch-row{display:grid;grid-template-columns:1fr auto 1fr;gap:16px;align-items:center}
+.node{border:1px solid #262624;border-radius:14px;padding:18px 16px;position:relative;overflow:hidden;min-height:150px}
+.node .dots{position:absolute;right:-72px;top:-72px;width:150px;height:150px;opacity:.9}
+.node b{display:block;font-family:var(--display);font-size:16px;font-weight:600;margin-bottom:8px;color:var(--ink)}
+.node span{display:block;color:var(--ink-2);line-height:1.6}
+.sock{color:var(--ink-3);text-align:center;line-height:1.4}
+.arch-foot{margin-top:18px;color:var(--ink-3);border-top:1px dashed #262624;padding-top:14px}
+@media (max-width:900px){.proof{grid-template-columns:1fr}.arch-row{grid-template-columns:1fr}.sock{padding:6px 0}}
+
+/* how it works: real sequence, so numbered */
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.step{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:28px 26px 30px;position:relative;overflow:hidden}
+.step .n{font-family:var(--mono);font-size:12px;color:var(--ink-3);letter-spacing:.12em}
+.step h3{margin:14px 0 10px}
+.step p{color:var(--ink-2);font-size:15.5px}
+.step .field{position:absolute;right:-40px;bottom:-40px;width:180px;height:180px;opacity:.85;pointer-events:none}
+@media (max-width:900px){.steps{grid-template-columns:1fr}}
+
+/* why: four cards, each with its own dot colour */
+.grid4{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:0;overflow:hidden;display:grid;grid-template-rows:auto auto}
+.term{--ac:var(--lime);background:#050505;border-bottom:1px solid var(--line);padding:16px 18px 18px;font-family:var(--mono);font-size:13px;line-height:1.75;color:var(--ink-2);min-height:200px}
+.term .bar{display:flex;align-items:center;gap:8px;margin-bottom:10px;color:var(--ink-3);font-size:12px}
+.term .bar i{width:9px;height:9px;border-radius:50%;background:var(--ac);display:inline-block}
+.term .k{color:var(--ac)}
+.term .h{color:var(--ink)}
+.term .m{color:var(--ink-3)}
+.term .add{color:var(--ac)}
+.term .del{color:#7A5C55;text-decoration:line-through}
+.term .row{display:flex;justify-content:space-between;gap:12px}
+.term .row .m{flex:none}
+.term pre{white-space:pre-wrap;word-break:break-word;font:inherit;margin:0}
+.card .body{padding:24px 26px 28px}
+.card p{color:var(--ink-2);font-size:15.5px;margin-top:8px}
+@media (max-width:820px){.grid4{grid-template-columns:1fr}}
+
+/* pricing: three ways to pay, no tiers */
+.plans{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.plan{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:30px 28px 32px;display:flex;flex-direction:column;gap:14px}
+.plan .name{font-family:var(--display);font-weight:600;font-size:22px}
+.plan .tag{font-family:var(--mono);font-size:12px;color:var(--ink-3);letter-spacing:.1em;text-transform:uppercase}
+.plan ul{list-style:none;color:var(--ink-2);font-size:15.5px;display:grid;gap:10px;margin-top:6px}
+.plan li{padding-left:22px;position:relative}
+.plan li::before{content:"";position:absolute;left:0;top:9px;width:9px;height:9px;border-radius:50%;background:var(--dot,var(--lime))}
+.plan.hi{border-color:#2F3A12;background:linear-gradient(180deg,#0D1005,#0B0B0A)}
+.plan .btn{margin-top:auto;align-self:flex-start}
+@media (max-width:900px){.plans{grid-template-columns:1fr}}
+
+/* faq */
+.faq{max-width:760px}
+.faq details{border-top:1px solid var(--line);padding:22px 0}
+.faq details:last-child{border-bottom:1px solid var(--line)}
+.faq summary{cursor:pointer;list-style:none;display:flex;justify-content:space-between;gap:20px;font-family:var(--display);font-weight:600;font-size:18px}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";color:var(--lime);font-weight:400;font-size:22px;line-height:1}
+.faq details[open] summary::after{content:"–"}
+.faq details p{margin-top:12px;color:var(--ink-2);max-width:62ch}
+
+/* cta */
+.cta{position:relative;overflow:hidden;text-align:center;padding:120px 0}
+.cta-field{position:absolute;inset:0;z-index:0;opacity:.9}
+.cta-field canvas{width:100%;height:100%;display:block}
+.cta-inner{position:relative;z-index:1}
+.cta h2{margin-bottom:16px}
+.cta p{color:var(--ink-2);max-width:48ch;margin:0 auto 32px}
+
+/* footer */
+footer{border-top:1px solid var(--line);padding:56px 0 40px;color:var(--ink-2);font-size:14px}
+.foot{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:32px}
+.foot h4{font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);margin-bottom:14px}
+.foot ul{list-style:none;display:grid;gap:9px}
+.foot a:hover{color:var(--ink)}
+.foot-bottom{margin-top:48px;padding-top:20px;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;color:var(--ink-3);font-size:13px}
+@media (max-width:820px){.foot{grid-template-columns:1fr 1fr}}
+
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.btn{transition:none}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <nav>
+      <a class="logo" href="#top" aria-label="Hirai App home">
+        <svg width="34" height="34" viewBox="0 0 512 512" aria-hidden="true" id="logo-mark"></svg>
+        <span>hora<span class="idot">i</span></span>
+      </a>
+      <div class="nav-links">
+        <a href="#how">How it works</a>
+        <a href="#why">Why Hirai App</a>
+        <a href="#self-hosted">Self-hosted</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#faq">FAQ</a>
+        <a href="/docs/">Docs</a>
+      </div>
+      <div class="nav-cta">
+        <a class="btn ghost" href="/app">Sign in</a>
+        <a class="btn primary" href="/app">Start building</a>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+
+<!-- HERO -->
+<section class="hero" style="border-top:0">
+  <div class="hero-field" aria-hidden="true"><canvas id="hero-canvas"></canvas></div>
+  <div class="wrap hero-inner">
+    <div class="hero-copy">
+      <div class="eyebrow">Agent builder · hosted or self-hosted</div>
+      <h1>One sentence.<br>A live <span class="accent">web app.</span></h1>
+      <p class="lead">Describe what you want. Hirai App builds it, deploys it to a public URL, and hands you the source. Run it hosted, or run the agent on your own machine with your own keys.</p>
+      <div class="hero-actions">
+        <a class="btn primary" href="/app">Start building</a>
+        <a class="btn ghost" href="#self-hosted">Run it yourself</a>
+      </div>
+      <div class="hero-note">no signup · a wallet is enough · your first apps are on us</div>
+    </div>
+    <div></div>
+  </div>
+</section>
+
+<!-- PROOF: self-hosted architecture -->
+<section id="self-hosted">
+  <div class="wrap proof">
+    <div class="proof-copy">
+      <div class="eyebrow">Self-hosted</div>
+      <h2 style="margin-top:14px">Your keys never leave your signer</h2>
+      <p>The self-hosted runtime is two processes. The agent thinks, plans, and calls tools. The signer holds your keys and is the only place they are ever decrypted. They talk over a local socket, and the signer has no network interface at all.</p>
+      <p>The site that ships it makes zero third-party requests. What you install is what you read.</p>
+    </div>
+    <div class="arch" role="img" aria-label="Two processes: agent and signer, connected by a local unix socket. The signer has no network access.">
+      <div class="arch-row">
+        <div class="node">
+          <canvas class="dots" data-color="#7FB3FF" data-n="40"></canvas>
+          <b>agent</b>
+          <span>plans, builds, calls tools<br>has network<br>never sees a key</span>
+        </div>
+        <div class="sock">unix<br>socket<br>⟷</div>
+        <div class="node">
+          <canvas class="dots" data-color="#C6F135" data-n="40"></canvas>
+          <b>signer</b>
+          <span>holds your keys<br>decrypts only to sign<br>no network, by design</span>
+        </div>
+      </div>
+      <div class="arch-foot">policy.yaml decides what the agent may ask the signer to do</div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <div class="eyebrow">How it works</div>
+        <h2>From a sentence to a URL</h2>
+      </div>
+      <p class="lead">Three things happen, in this order, every time.</p>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <canvas class="field" data-color="#F5F1E8" data-n="60"></canvas>
+        <div class="n">STEP 1</div>
+        <h3>Describe it</h3>
+        <p>Say what you want in plain language. Hirai App replies with a proposal: what it will build, the palette and layout it plans to use, and one question if something is unclear.</p>
+      </div>
+      <div class="step">
+        <canvas class="field" data-color="#5DF0C2" data-n="60"></canvas>
+        <div class="n">STEP 2</div>
+        <h3>It builds and checks</h3>
+        <p>The agent writes a real multi-file app, builds it in an isolated container, and renders the result in a browser before it calls it done.</p>
+      </div>
+      <div class="step">
+        <canvas class="field" data-color="#C6F135" data-n="60"></canvas>
+        <div class="n">STEP 3</div>
+        <h3>It goes live</h3>
+        <p>Your app gets a public URL and a source zip you can take anywhere. Ask for changes and the same URL updates.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHY -->
+<section id="why">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <div class="eyebrow">Why Hirai App</div>
+        <h2>Real apps, real memory, your terms</h2>
+      </div>
+      <p class="lead">Built for people who want the thing, not a demo of the thing.</p>
+    </div>
+    <div class="grid4">
+      <div class="card">
+        <div class="term" style="--ac:#C6F135">
+          <div class="bar"><i></i>job · splitbill</div>
+          <pre><span class="k">▸ proposal</span>  bill splitter · slate + lime · <span class="h">1 question</span>
+<span class="k">▸ build</span>     5 files · vite · 3.4s
+<span class="k">▸ verify</span>    rendered in chrome · form saves · totals update
+<span class="k">▸ live</span>      <span class="h">apps.hiraiapp.com/splitbill</span> · source.zip</pre>
+        </div>
+        <div class="body">
+          <h3>Working apps, not brochures</h3>
+          <p>A bill splitter has a form that saves, totals that update as you type, and state that survives a reload. Hirai App tells the difference between an app and a landing page, and builds the one you asked for.</p>
+        </div>
+      </div>
+      <div class="card">
+        <div class="term" style="--ac:#7FB3FF">
+          <div class="bar"><i></i>settings · memory · this wallet</div>
+          <div class="row"><span><span class="k">•</span> prefers dark UI, no serif fonts</span><span class="m">delete</span></div>
+          <div class="row"><span><span class="k">•</span> planning a weekend market stall</span><span class="m">delete</span></div>
+          <div class="row"><span><span class="k">•</span> last app: splitbill · iterated ×2</span><span class="m">delete</span></div>
+          <div class="row" style="margin-top:8px"><span class="m">memory</span><span class="h">on</span></div>
+        </div>
+        <div class="body">
+          <h3>Memory that carries over</h3>
+          <p>Threads keep their history, apps remember what they were built from, and the things you tell Hirai App about yourself follow you across projects. You can see and delete all of it.</p>
+        </div>
+      </div>
+      <div class="card">
+        <div class="term" style="--ac:#FFB4A2">
+          <div class="bar"><i></i>iterate · splitbill</div>
+          <pre><span class="m">you</span>  make the tip 12% instead of 10%
+<span class="del">-  const tip = 0.10</span>
+<span class="add">+  const tip = 0.12</span>
+<span class="k">▸</span> 1 file changed · rebuilt · <span class="h">same URL</span></pre>
+        </div>
+        <div class="body">
+          <h3>Iterate on the live thing</h3>
+          <p>Ask for a change and the agent reads the running app's source, edits only what you asked for, and redeploys to the same address.</p>
+        </div>
+      </div>
+      <div class="card">
+        <div class="term" style="--ac:#B388FF">
+          <div class="bar"><i></i>python</div>
+          <pre><span class="m">from</span> openai <span class="m">import</span> OpenAI
+client = OpenAI(
+  base_url=<span class="k">"https://api.hiraiapp.com/v1"</span>,
+  api_key=<span class="k">"your key"</span>)
+client.chat.completions.create(
+  model=<span class="h">"auto"</span>, messages=[...])</pre>
+        </div>
+        <div class="body">
+          <h3>One API for every model</h3>
+          <p>An OpenAI-compatible endpoint with one key. Point any SDK at it. Bring your own provider keys and the bill goes to you, not through us.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <div class="eyebrow">Pricing</div>
+        <h2>Three ways to pay. No plan wall.</h2>
+      </div>
+      <p class="lead">Pay for what the agent actually uses, or bring your own key and pay us nothing.</p>
+    </div>
+    <div class="plans">
+      <div class="plan" style="--dot:#F5F1E8">
+        <div class="tag">Start</div>
+        <div class="name">Free</div>
+        <ul>
+          <li>No card, no email, connect a wallet</li>
+          <li>Build and deploy from the chat</li>
+          <li>Public URL and source zip for every app</li>
+        </ul>
+        <a class="btn ghost" href="/app">Start building</a>
+      </div>
+      <div class="plan hi" style="--dot:#C6F135">
+        <div class="tag">Bring your own key</div>
+        <div class="name">Your key, your bill</div>
+        <ul>
+          <li>Add keys from the providers you already pay</li>
+          <li>Encrypted at rest, shown only as a badge</li>
+          <li>Every route runs on your key, nothing is debited here</li>
+          <li>Same in the hosted app and the self-hosted runtime</li>
+        </ul>
+        <a class="btn primary" href="/app/settings">Add a key</a>
+      </div>
+      <div class="plan" style="--dot:#5DF0C2">
+        <div class="tag">Pay as you go</div>
+        <div class="name">Deposit stablecoins</div>
+        <ul>
+          <li>Top up with USDC on Base or Solana, or USDG on Robinhood Chain</li>
+          <li>Debited at the provider's cost, per request</li>
+          <li>Every line of spend visible in your dashboard</li>
+        </ul>
+        <a class="btn ghost" href="/app/usage">See usage</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <div class="eyebrow">FAQ</div>
+        <h2>Questions people ask first</h2>
+      </div>
+    </div>
+    <div class="faq">
+      <details><summary>What can Hirai App build?</summary><p>Static sites and single-page apps: landing pages, dashboards, trackers, tools, small games. Anything that runs in a browser without its own backend. Each app is a real multi-file project you can download.</p></details>
+      <details><summary>Where does my app live?</summary><p>On a public URL under Hirai App's app domain, on its own origin. You also get the source as a zip with no lock-in to Hirai App.</p></details>
+      <details><summary>Do I need an account?</summary><p>No. Connect a wallet and sign a message. That signature is your login. No email, no password.</p></details>
+      <details><summary>What is the self-hosted runtime?</summary><p>The same agent, running on your machine as two processes. The signer holds your keys and never gets a network interface. It talks to Hirai App for inference and builds using your own API key.</p></details>
+      <details><summary>Which models can I use?</summary><p>Any model available through the built-in router, or any provider you add a key for. Hirai App picks the cheapest capable route unless you pin one.</p></details>
+      <details><summary>Can I change an app after it's live?</summary><p>Yes. Ask in the same thread. The agent edits the running app's source and redeploys to the same URL.</p></details>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta">
+  <div class="cta-field" aria-hidden="true"><canvas id="cta-canvas"></canvas></div>
+  <div class="wrap cta-inner">
+    <h2>Say the sentence.</h2>
+    <p>Your first app is a few minutes away, and you keep the source.</p>
+    <a class="btn primary" href="/app">Start building</a>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div>
+        <div class="logo" style="font-size:20px"><svg width="26" height="26" viewBox="0 0 512 512" aria-hidden="true" id="logo-mark-2"></svg><span>hora<span class="idot">i</span></span></div>
+        <p style="margin-top:14px;max-width:32ch">One sentence in. A live web app out. Hosted, or on your own machine.</p>
+      </div>
+      <div><h4>Product</h4><ul><li><a href="#how">How it works</a></li><li><a href="#why">Why Hirai App</a></li><li><a href="#pricing">Pricing</a></li><li><a href="/docs/">Docs</a></li></ul></div>
+      <div><h4>Run it yourself</h4><ul><li><a href="#self-hosted">Self-hosted runtime</a></li><li><a href="#faq">FAQ</a></li></ul></div>
+      <div><h4>Connect</h4><ul><li><a href="https://x.com/hiraiapp">X</a></li></ul></div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 Hirai App</span>
+      <span>hiraiapp.com</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  const GA = 137.508 * Math.PI/180;
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const lerp=(a,b,t)=>a+(b-a)*t;
+  const hex=h=>[parseInt(h.slice(1,3),16),parseInt(h.slice(3,5),16),parseInt(h.slice(5,7),16)];
+  const mix=(a,b,t)=>`rgb(${lerp(a[0],b[0],t)|0},${lerp(a[1],b[1],t)|0},${lerp(a[2],b[2],t)|0})`;
+  const WHITE=hex('#F5F1E8'), LIME=hex('#C6F135');
+
+  // logo mark in nav/footer (static SVG)
+  function markSVG(el){
+    let s='';
+    for(let n=1;n<=150;n++){const th=n*GA,r=16.8*Math.sqrt(n),t=(n-1)/149;
+      s+=`<circle cx="${256+r*Math.cos(th)}" cy="${256+r*Math.sin(th)}" r="${4+7*t}" fill="${mix(WHITE,LIME,t)}"/>`;}
+    el.innerHTML=s;
+  }
+  markSVG(document.getElementById('logo-mark'));
+  markSVG(document.getElementById('logo-mark-2'));
+
+  // generic seed-head field on a canvas, colour = gradient from white to data-color
+  function field(canvas,{N=150,c=16.8,r0=4,r1=11,color='#C6F135',cx=.5,cy=.5,scale=1,animate=false,burst=false}={}){
+    const ctx=canvas.getContext('2d'); const col=hex(color);
+    let w,h,dpr,t0=performance.now(),burstAt=-1,raf=0;
+    const DUR=1500;
+    // per-seed scatter direction and distance, fixed once so the burst is stable
+    const jit=[];for(let n=0;n<=N;n++)jit.push({a:(Math.random()-.5)*0.9,d:0.55+Math.random()*0.9});
+    function size(){dpr=Math.min(2,devicePixelRatio||1);const b=canvas.getBoundingClientRect();w=b.width;h=b.height;canvas.width=w*dpr;canvas.height=h*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);}
+    function draw(now){
+      ctx.clearRect(0,0,w,h);
+      const S=scale*Math.min(w,h)/512; const ox=w*cx, oy=h*cy;
+      const spin=animate&&!reduce; const ph=(now-t0)/1000;
+      let e=0; if(burstAt>=0){const t=Math.min(1,(now-burstAt)/DUR); e=Math.sin(Math.PI*Math.pow(t,0.55)); if(t>=1){burstAt=-1;e=0;}}
+      for(let n=1;n<=N;n++){
+        const th=n*GA + (spin?ph*0.03:0);
+        const r=c*Math.sqrt(n)*S; const t=(n-1)/(N-1);
+        const breathe=spin?1+0.10*Math.sin(ph*1.2 - n*0.045):1;
+        let rr=r, ta=th;
+        if(e>0){ const j=jit[n]; rr=r+e*j.d*Math.min(w,h)*0.38; ta=th+e*j.a; }
+        ctx.beginPath();
+        ctx.arc(ox+rr*Math.cos(ta), oy+rr*Math.sin(ta), (r0+(r1-r0)*t)*S*breathe, 0, Math.PI*2);
+        ctx.fillStyle=mix(WHITE,col,t); ctx.fill();
+      }
+      if(spin || burstAt>=0) raf=requestAnimationFrame(draw); else raf=0;
+    }
+    size(); draw(t0);
+    addEventListener('resize',()=>{size();if(!raf)draw(performance.now());},{passive:true});
+    if(burst){
+      canvas.style.cursor='pointer';
+      canvas.addEventListener('pointerdown',()=>{ if(burstAt>=0) return; burstAt=performance.now(); if(!raf) raf=requestAnimationFrame(draw); });
+    }
+  }
+
+  // hero: the logo, large, sitting right of the copy, slowly breathing
+  const hero=document.getElementById('hero-canvas');
+  const mq=matchMedia('(max-width:900px)');
+  field(hero,{N:420,c:16.8,r0:2.5,r1:12,color:'#C6F135',cx:mq.matches?0.5:0.77,cy:0.5,scale:mq.matches?0.68:0.5,animate:true,burst:true});
+
+  // small clusters
+  document.querySelectorAll('canvas.dots, canvas.field').forEach(cv=>{
+    const color=cv.dataset.color||'#C6F135';
+    const N=+cv.dataset.n||60; const c=+(cv.dataset.c||16.8);
+    const inCard=cv.closest('.art');
+    field(cv,{N,c:inCard?15:c,r0:inCard?2.5:4,r1:inCard?8:11,color,cx:0.5,cy:0.5,scale:inCard?1.6:1});
+  });
+
+  // cta: a wide, quiet field behind the headline
+  field(document.getElementById('cta-canvas'),{N:900,c:20,r0:1,r1:3.5,color:'#C6F135',cx:0.5,cy:0.5,scale:2.2});
+})();
+</script>
+</body>
+</html>
+
